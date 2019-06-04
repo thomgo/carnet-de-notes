@@ -1,9 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
-from .views import app
-
 # Create database connection object
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 class Thought(db.Model):
     id = db.Column(db.Integer, primary_key=True)

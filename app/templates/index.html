@@ -1,9 +1,0 @@
-{% extends "layout.html" %}
-{% block body %}
-  {% if object %}
-    <h2>Page concernant : {{object}} </h2>
-    {% for thought in thoughts %}
-      <p>{{ thought.content }}</p>
-    {% endfor %}
-  {% endif %}
-{% endblock %}
