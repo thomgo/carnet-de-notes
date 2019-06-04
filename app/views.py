@@ -1,13 +1,14 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
 
 app = Flask(__name__)
 app.config.from_object('config')
 
-@app.route('/index')
+@app.route('/index/')
 @app.route('/index/<object>')
 def index(object=None):
-    return render_template("index.html", object=object)
+    from .models import Thought
+    thoughts = Thought.query.all()
+    return render_template("index.html", object=object, thoughts=thoughts)
 
 if __name__ == "__main__":
     app.run()
