@@ -1,7 +1,15 @@
 {% extends "layout.html.j2" %}
 {% block body %}
   <h2>Les dernières pensées</h2>
-  {% for thought in thoughts %}
-    <p>{{ thought.content }}</p>
-  {% endfor %}
+  <div class="row">
+    {% for thought in thoughts %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <section class="card bg-light mb-3 text-center" style="max-width: 20rem;">
+          <div class="card-body">
+            <h4 class="card-title">{{ thought.content }}</h4>
+          </div>
+        </section>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

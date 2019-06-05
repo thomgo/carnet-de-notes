@@ -1,11 +1,25 @@
 {% extends "./layout.html.j2" %}
 {% block body %}
-  <h2>Les dernières pensées</h2>
+  <h2>Pensées enregistrées <a href="{{ url_for('new_thought')}}" class="btn btn-secondary"><i class="fas fa-folder-plus"></i> pensée</a></h2>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Citation</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+  <tbody>
   {% for thought in thoughts %}
-    <p>
-      {{ thought.content }}
-      <a href="{{ url_for('delete_thought', id=thought.id)}}">Supprimer</a>
-      <a href="{{ url_for('update_thought', id=thought.id)}}">Modifier</a>
-    </p>
+    <tr>
+      <td>{{ thought.id }}</td>
+      <td>{{ thought.content }}</td>
+      <td>
+        <a href="{{ url_for('delete_thought', id=thought.id)}}"><i class="fas fa-trash-alt text-danger mr-3"></i></a>
+        <a href="{{ url_for('update_thought', id=thought.id)}}"><i class="fas fa-pen-nib text-secondary mr-3"></i></a>
+      </td>
+    </tr>
   {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}
