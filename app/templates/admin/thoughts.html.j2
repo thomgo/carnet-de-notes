@@ -1,0 +1,7 @@
+{% extends "./layout.html.j2" %}
+{% block body %}
+  <h2>Les dernières pensées</h2>
+  {% for thought in thoughts %}
+    <p>{{ thought.content }} <a href="{{ url_for('delete_thought', id=thought.id)}}">Supprimer</a></p>
+  {% endfor %}
+{% endblock %}
