@@ -1,0 +1,14 @@
+{% extends "layout.html.j2" %}
+{% block body %}
+  <h2>Modifier la pensée :</h2>
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div>
+      {{ form.content.label }}
+      {{ form.content() }}
+    </div>
+    <div>
+      {{ form.submit() }}
+    </div>
+  </form>
+{% endblock %}
