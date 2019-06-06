@@ -6,6 +6,10 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 @app.route('/')
+@app.route('/login/')
+def login():
+    return render_template("login.html.j2", thoughts=thoughts)
+
 @app.route('/index/')
 def index():
     thoughts = Thought.query.all()
