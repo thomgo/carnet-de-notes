@@ -4,20 +4,17 @@
     <h1 class="text-center text-muted">Accéder à votre carnet de note</h1>
     <div class="d-flex justify-content-center mt-5">
       <form method="post" action="" class="w-25">
+        {{ form.hidden_tag() }}
         <div class="form-group">
-          <label>Pseudo</label>
-          <input type="text" class="form-control" placeholder="votre pseudo utilisateur">
+          {{ form.pseudo.label }}
+          {{ form.pseudo(class_="form-control") }}
         </div>
         <div class="form-group">
-          <label>Mot de passe</label>
-          <input type="password" class="form-control" placeholder="votre mot de passe">
-        </div>
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-          <label class="form-check-label" for="exampleCheck1">Rester connecté</label>
+          {{ form.password.label }}
+          {{ form.password(class_="form-control") }}
         </div>
         <div class="text-center">
-          <button type="submit" class="btn btn-success">Se connecter</button>
+          {{ form.submit(class_="btn btn-success") }}
         </div>
       </form>
     </div>

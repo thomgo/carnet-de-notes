@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect
 from .models import Thought, db
-from .forms import NewThoughtForm
+from .forms import NewThoughtForm, LoginForm
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -8,7 +8,8 @@ app.config.from_object('config')
 @app.route('/')
 @app.route('/login/')
 def login():
-    return render_template("login.html.j2", thoughts=thoughts)
+    form = LoginForm()
+    return render_template("login.html.j2", thoughts=thoughts, form=form)
 
 @app.route('/index/')
 def index():
