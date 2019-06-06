@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, render_template, redirect, flash
 from .models import Thought, User, db
 from .forms import NewThoughtForm, LoginForm, RegisterForm
@@ -30,6 +32,16 @@ def logout():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        user = User(
+            last_name = form.last_name.data,
+            first_name = form.first_name.data,
+            pseudo = form.pseudo.data,
+            description = form.description.data
+        )
+        user.set_password(form.password.data)
+        user.registering_date = datetime.now()
+        db.session.add(user)
+        db.session.commit()
         return redirect('/login/')
     return render_template("register.html.j2", form=form)
 

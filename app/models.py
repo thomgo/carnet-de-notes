@@ -23,7 +23,7 @@ class User(UserMixin, db.Model):
     registering_date = db.Column(db.DateTime(), nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, last_name, first_name, pseudo, description, registering_date, password):
+    def __init__(self, last_name, first_name, pseudo, description, registering_date=None, password=None):
         self.last_name = last_name
         self.first_name = first_name
         self.pseudo = pseudo
