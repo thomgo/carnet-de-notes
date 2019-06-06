@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect
 from .models import Thought, User, db
 from .forms import NewThoughtForm, LoginForm
-from flask_login import login_user
+from flask_login import login_user, logout_user
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -16,6 +16,11 @@ def login():
             login_user(user)
             return redirect("/index")
     return render_template("login.html.j2", thoughts=thoughts, form=form)
+
+@app.route('/logout/')
+def logout():
+    logout_user()
+    return redirect('/login/')
 
 @app.route('/index/')
 def index():

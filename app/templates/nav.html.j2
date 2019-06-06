@@ -13,7 +13,7 @@
         <a class="nav-link text-white" href=""><i class="fas fa-user"></i> {{ current_user.first_name }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white" href=""><i class="fas fa-door-open"></i> Déconnexion</a>
+        <a class="nav-link text-white" href="{{ url_for('logout')}}"><i class="fas fa-door-open"></i> Déconnexion</a>
       </li>
     </ul>
   </div>
