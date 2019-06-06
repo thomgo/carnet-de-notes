@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, flash
 from .models import Thought, User, db
-from .forms import NewThoughtForm, LoginForm
+from .forms import NewThoughtForm, LoginForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
@@ -25,6 +25,13 @@ def login():
 def logout():
     logout_user()
     return redirect('/login/')
+
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        return redirect('/login/')
+    return render_template("register.html.j2", form=form)
 
 @app.route('/index/')
 @login_required
