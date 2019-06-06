@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect
 from .models import Thought, User, db
 from .forms import NewThoughtForm, LoginForm
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -18,22 +18,26 @@ def login():
     return render_template("login.html.j2", thoughts=thoughts, form=form)
 
 @app.route('/logout/')
+@login_required
 def logout():
     logout_user()
     return redirect('/login/')
 
 @app.route('/index/')
+@login_required
 def index():
     thoughts = Thought.query.all()
     return render_template("index.html.j2", thoughts=thoughts)
 
 
 @app.route('/admin/thoughts/')
+@login_required
 def thoughts():
     thoughts = Thought.query.all()
     return render_template("admin/thoughts.html.j2", thoughts = thoughts)
 
 @app.route('/admin/thought/new', methods=['GET', 'POST'])
+@login_required
 def new_thought():
     form = NewThoughtForm()
     if form.validate_on_submit():
@@ -44,6 +48,7 @@ def new_thought():
     return render_template("admin/new_thought.html.j2", form=form)
 
 @app.route('/admin/thought/delete/<int:id>')
+@login_required
 def delete_thought(id):
     thought = Thought.query.get(id)
     db.session.delete(thought)
@@ -51,6 +56,7 @@ def delete_thought(id):
     return redirect('/admin/thoughts/')
 
 @app.route('/admin/thought/update/<int:id>', methods=['GET', 'POST'])
+@login_required
 def update_thought(id):
     thought = Thought.query.get(id)
     form = NewThoughtForm(obj=thought)
