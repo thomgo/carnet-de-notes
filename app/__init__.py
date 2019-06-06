@@ -13,3 +13,7 @@ login_manager.init_app(app)
 @app.cli.command("init_db")
 def init_db():
     models.init_db()
+
+@login_manager.user_loader
+def load_user(id):
+    return models.User.query.get(int(id))

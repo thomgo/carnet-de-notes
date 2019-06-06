@@ -1,10 +1,20 @@
 <nav class="mb-5 bg-dark text-white py-1">
-  <ul class="nav container">
-    <li class="nav-item">
-      <a class="nav-link text-white" href="{{ url_for('index') }}">Accueil</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-white" href="{{ url_for('thoughts') }}">Admin</a>
-    </li>
-  </ul>
+  <div class="container d-flex justify-content-between">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{{ url_for('index') }}">Accueil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{{ url_for('thoughts') }}">Admin</a>
+      </li>
+    </ul>
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link text-white" href=""><i class="fas fa-user"></i> {{ current_user.first_name }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href=""><i class="fas fa-door-open"></i> Déconnexion</a>
+      </li>
+    </ul>
+  </div>
 </nav>

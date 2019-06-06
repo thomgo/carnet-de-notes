@@ -1,14 +1,20 @@
 from flask import Flask, render_template, redirect
-from .models import Thought, db
+from .models import Thought, User, db
 from .forms import NewThoughtForm, LoginForm
+from flask_login import login_user
 
 app = Flask(__name__)
 app.config.from_object('config')
 
-@app.route('/')
-@app.route('/login/')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(pseudo=form.pseudo.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            return redirect("/index")
     return render_template("login.html.j2", thoughts=thoughts, form=form)
 
 @app.route('/index/')

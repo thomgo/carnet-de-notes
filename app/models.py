@@ -1,4 +1,5 @@
 import hashlib
+from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -31,16 +32,21 @@ class User(UserMixin, db.Model):
         self.password = password
 
     def set_password(self, password):
-         self.password = hashlib.sha256(password).hexdigest()
+         self.password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     def check_password(self, password):
-        if hashlib.sha256(password).hexdigest() == self.password:
+        if hashlib.sha256(password.encode('utf-8')).hexdigest() == self.password:
             return True
         return False
-
 
 def init_db():
     db.drop_all()
     db.create_all()
+    user = User("Gossart", "Thomas", "totopro", None, datetime.now(), None)
+    user.set_password("thomas1992")
+    db.session.add(user)
+    user = User("Python", "John", "jojo", "fan de prog python", datetime.now(), None)
+    user.set_password("jojoasticot")
+    db.session.add(user)
     db.session.commit()
     print("Database initialized !")
