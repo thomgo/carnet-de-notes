@@ -60,14 +60,14 @@ def register():
 @app.route('/index/')
 @login_required
 def index():
-    thoughts = Thought.query.all()
+    thoughts = Thought.query.filter_by(user=current_user).all()
     return render_template("index.html.j2", thoughts=thoughts)
 
 
 @app.route('/admin/thoughts/')
 @login_required
 def thoughts():
-    thoughts = Thought.query.all()
+    thoughts = Thought.query.filter_by(user=current_user).all()
     return render_template("admin/thoughts.html.j2", thoughts = thoughts)
 
 @app.route('/admin/thought/new', methods=['GET', 'POST'])
@@ -75,7 +75,7 @@ def thoughts():
 def new_thought():
     form = NewThoughtForm()
     if form.validate_on_submit():
-        thought = Thought(form.content.data)
+        thought = Thought(form.content.data, current_user.id)
         db.session.add(thought)
         db.session.commit()
         return redirect('/index')
@@ -85,8 +85,10 @@ def new_thought():
 @login_required
 def delete_thought(id):
     thought = Thought.query.get(id)
-    db.session.delete(thought)
-    db.session.commit()
+    if thought.user == current_user:
+        db.session.delete(thought)
+        db.session.commit()
+        flash("Votre note a bien été supprimée", "success")
     return redirect('/admin/thoughts/')
 
 @app.route('/admin/thought/update/<int:id>', methods=['GET', 'POST'])

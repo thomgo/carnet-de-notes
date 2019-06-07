@@ -10,9 +10,11 @@ db = SQLAlchemy()
 class Thought(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    def __init__(self, content):
+    def __init__(self, content, user_id):
         self.content = content
+        self.user_id = user_id
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +24,7 @@ class User(UserMixin, db.Model):
     description = db.Column(db.Text(), nullable=True)
     registering_date = db.Column(db.DateTime(), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    thoughts = db.relationship('Thought', backref='user', lazy=True)
 
     def __init__(self, last_name, first_name, pseudo, description, registering_date=None, password=None):
         self.last_name = last_name
