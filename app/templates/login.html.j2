@@ -4,13 +4,7 @@
     <h1 class="text-center text-muted">Accéder à votre carnet de note</h1>
     <div class="d-flex justify-content-center mt-5">
       <form method="post" action="" class="w-25">
-        {% if get_flashed_messages() %}
-          {% for message in get_flashed_messages() %}
-            <div class="alert alert-danger" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
+        {% include "flash_messages.html.j2"%}
         {{ form.hidden_tag() }}
         <div class="form-group">
           {{ form.pseudo.label }}

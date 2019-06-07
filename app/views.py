@@ -29,13 +29,14 @@ def login():
             if not is_safe_url(next):
                 return abort(400)
             return redirect(next or '/index/')
-        flash("Pseudo ou mot de passe incorect(s)")
+        flash("Pseudo ou mot de passe incorect(s)", "danger")
     return render_template("login.html.j2", thoughts=thoughts, form=form)
 
 @app.route('/logout/')
 @login_required
 def logout():
     logout_user()
+    flash("Vous avez bien été déconnecté", "success")
     return redirect('/login/')
 
 @app.route('/register/', methods=['GET', 'POST'])
@@ -52,6 +53,7 @@ def register():
         user.registering_date = datetime.now()
         db.session.add(user)
         db.session.commit()
+        flash("Votre compte a été créé", "success")
         return redirect('/login/')
     return render_template("register.html.j2", form=form)
 
