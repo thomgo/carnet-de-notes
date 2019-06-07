@@ -85,7 +85,7 @@ def new_thought():
 @login_required
 def delete_thought(id):
     thought = Thought.query.get(id)
-    if thought.user == current_user:
+    if thought and thought.user == current_user:
         db.session.delete(thought)
         db.session.commit()
         flash("Votre note a bien été supprimée", "success")
@@ -95,6 +95,9 @@ def delete_thought(id):
 @login_required
 def update_thought(id):
     thought = Thought.query.get(id)
+    if not thought or thought.user != current_user:
+        flash("Il semble qu'il y ait eu un problème", "danger")
+        return redirect("/admin/thoughts/")
     form = NewThoughtForm(obj=thought)
     if form.validate_on_submit():
         thought.content = form.content.data
