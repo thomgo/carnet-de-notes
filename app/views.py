@@ -1,12 +1,19 @@
 from datetime import datetime
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, request, abort, url_for
 from .models import Thought, User, db
 from .forms import NewThoughtForm, LoginForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
+from urllib.parse import urlparse, urljoin
 
 app = Flask(__name__)
 app.config.from_object('config')
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login/', methods=['GET', 'POST'])
@@ -18,7 +25,10 @@ def login():
         user = User.query.filter_by(pseudo=form.pseudo.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            return redirect("/index")
+            next = request.args.get('next')
+            if not is_safe_url(next):
+                return abort(400)
+            return redirect(next or '/index/')
         flash("Pseudo ou mot de passe incorect(s)")
     return render_template("login.html.j2", thoughts=thoughts, form=form)
 
