@@ -1,3 +1,5 @@
+"""Module the contains the routes with associated methods"""
+
 from datetime import datetime
 
 from flask import Flask, render_template, redirect, flash, request, abort, url_for
@@ -10,6 +12,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 def is_safe_url(target):
+    """Function to check that the redirection url is safe and from the same server"""
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
@@ -18,6 +21,7 @@ def is_safe_url(target):
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    """Function to show login form and check user credentials in database"""
     if current_user.is_authenticated:
         return redirect('/index/')
     form = LoginForm()
@@ -35,12 +39,14 @@ def login():
 @app.route('/logout/')
 @login_required
 def logout():
+    """Function to log the user out with flask_login"""
     logout_user()
     flash("Vous avez bien été déconnecté", "success")
     return redirect('/login/')
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
+    """Function to show a registration form and save a new user in database"""
     form = RegisterForm()
     if form.validate_on_submit():
         user = User(
@@ -60,6 +66,7 @@ def register():
 @app.route('/index/')
 @login_required
 def index():
+    """Function to show the user thoughts by default"""
     thoughts = Thought.query.filter_by(user=current_user).all()
     return render_template("index.html.j2", thoughts=thoughts)
 
@@ -67,12 +74,14 @@ def index():
 @app.route('/admin/thoughts/')
 @login_required
 def thoughts():
+    """Function to show the thoughts in the admin panel"""
     thoughts = Thought.query.filter_by(user=current_user).all()
     return render_template("admin/thoughts.html.j2", thoughts = thoughts)
 
 @app.route('/admin/thought/new', methods=['GET', 'POST'])
 @login_required
 def new_thought():
+    """Function to show a form and add a thought in database"""
     form = NewThoughtForm()
     if form.validate_on_submit():
         thought = Thought(form.content.data, current_user.id)
@@ -84,6 +93,7 @@ def new_thought():
 @app.route('/admin/thought/delete/<int:id>')
 @login_required
 def delete_thought(id):
+    """Function to delete a thought in database"""
     thought = Thought.query.get(id)
     if thought and thought.user == current_user:
         db.session.delete(thought)
@@ -94,6 +104,7 @@ def delete_thought(id):
 @app.route('/admin/thought/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_thought(id):
+    """Function to show a form with thought's info and update it in the database"""
     thought = Thought.query.get(id)
     if not thought or thought.user != current_user:
         flash("Il semble qu'il y ait eu un problème", "danger")

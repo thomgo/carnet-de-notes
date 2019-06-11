@@ -1,3 +1,5 @@
+"""Module to hold the entities class stored in the database with sqlalchemy"""
+
 import hashlib
 from datetime import datetime
 
@@ -19,7 +21,7 @@ class Thought(db.Model):
         self.user_id = user_id
 
 class User(UserMixin, db.Model):
-    """Represent a User entity with credentials for authentication"""
+    """Represent a User entity with credentials for authentication from UserMixin"""
     id = db.Column(db.Integer, primary_key=True)
     last_name = db.Column(db.String(50), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
