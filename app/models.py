@@ -45,11 +45,8 @@ class User(UserMixin, db.Model):
 def init_db():
     db.drop_all()
     db.create_all()
-    user = User("Gossart", "Thomas", "totopro", None, datetime.now(), None)
-    user.set_password("thomas1992")
-    db.session.add(user)
-    user = User("Python", "John", "jojo", "fan de prog python", datetime.now(), None)
-    user.set_password("jojoasticot")
+    user = User("test", "test", "test", None, datetime.now(), None)
+    user.set_password("Test1234")
     db.session.add(user)
     db.session.commit()
     print("Database initialized !")
