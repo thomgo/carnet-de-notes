@@ -8,8 +8,10 @@ from flask_login import UserMixin
 db = SQLAlchemy()
 
 class Thought(db.Model):
+    """Represent a Thought entity, basically a sentence from a user"""
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
+    #Relation with the user who has written the thought
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, content, user_id):
@@ -17,6 +19,7 @@ class Thought(db.Model):
         self.user_id = user_id
 
 class User(UserMixin, db.Model):
+    """Represent a User entity with credentials for authentication"""
     id = db.Column(db.Integer, primary_key=True)
     last_name = db.Column(db.String(50), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
@@ -24,6 +27,7 @@ class User(UserMixin, db.Model):
     description = db.Column(db.Text(), nullable=True)
     registering_date = db.Column(db.DateTime(), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    #Store all the thoughts published by a user
     thoughts = db.relationship('Thought', backref='user', lazy=True)
 
     def __init__(self, last_name, first_name, pseudo, description, registering_date=None, password=None):
@@ -35,14 +39,17 @@ class User(UserMixin, db.Model):
         self.password = password
 
     def set_password(self, password):
-         self.password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        """Function to hash the password before setting it in the attribut"""
+        self.password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     def check_password(self, password):
+        """Function to check that the user password match another password"""
         if hashlib.sha256(password.encode('utf-8')).hexdigest() == self.password:
             return True
         return False
 
 def init_db():
+    """Function to init the database tables with a sample user"""
     db.drop_all()
     db.create_all()
     user = User("test", "test", "test", None, datetime.now(), None)
