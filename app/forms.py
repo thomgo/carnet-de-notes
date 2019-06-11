@@ -1,3 +1,5 @@
+import re
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextField
 from wtforms.validators import DataRequired, EqualTo, ValidationError
@@ -26,3 +28,7 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(pseudo=pseudo.data).first()
         if user is not None:
             raise ValidationError('Ce pseudo est déjà pris :(')
+
+    def validate_password(self, password):
+        if not re.search("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$", str(password)):
+            raise ValidationError('Attention le mot de passe doit contenir 6 caractères, une minuscule, une majuscule et un chiffre')
