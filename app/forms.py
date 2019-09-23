@@ -6,6 +6,9 @@ from wtforms.validators import DataRequired, EqualTo, ValidationError, Regexp
 
 from .models import User
 
+# Note that each form corresponds to an entities from the model
+# Form fields are defiened by class attributs holding object of the correspnding type field
+
 class NewThoughtForm(FlaskForm):
     """ Class to generate a form to add a thought to the database"""
     content = StringField('Citation', validators=[DataRequired()])
@@ -33,6 +36,8 @@ class RegisterForm(FlaskForm):
     ])
     submit = SubmitField("S'inscrire")
 
+    # NOTE: this a special validation system from wtfform
+    # each method of a form starting with validate_ + the field name is called when submitting the form
     def validate_pseudo(self, pseudo):
         """Function that checks that the pseudo is not already used in database"""
         user = User.query.filter_by(pseudo=pseudo.data).first()
