@@ -56,20 +56,29 @@ def logout():
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
     """Function to show a registration form and save a new user in database"""
+    # Instance of the form object used to display an HTML form in the view
     form = RegisterForm()
+    # If the form is correctly filled according to specifications of the forms file
     if form.validate_on_submit():
-        user = User(
-            last_name = form.last_name.data,
-            first_name = form.first_name.data,
-            pseudo = form.pseudo.data,
-            description = form.description.data
-        )
-        user.set_password(form.password.data)
-        user.registering_date = datetime.now()
-        db.session.add(user)
-        db.session.commit()
-        flash("Votre compte a été créé", "success")
-        return redirect('/login/')
+        try:
+            # Instanciate a user object from form data
+            user = User(
+                last_name = form.last_name.data,
+                first_name = form.first_name.data,
+                pseudo = form.pseudo.data,
+                description = form.description.data
+            )
+            # Encode the password and store the current date
+            user.set_password(form.password.data)
+            user.registering_date = datetime.now()
+            # Register the user in the Database
+            db.session.add(user)
+            db.session.commit()
+            # Store a success message and go to login page
+            flash("Votre compte a été créé", "success")
+            return redirect('/login/')
+        except Exception as e:
+            flash("Une erreur est survenue, nous n'avons pas pu vous enregistrer", "danger")
     return render_template("register.html.j2", form=form)
 
 @app.route('/index/')
