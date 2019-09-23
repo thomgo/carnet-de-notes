@@ -115,7 +115,3 @@ def update_thought(id):
         db.session.commit()
         return redirect('/admin/thoughts/')
     return render_template('admin/update_thought.html.j2', thought=thought, form=form)
-
-# 
-# if __name__ == "__main__":
-#     app.run()
