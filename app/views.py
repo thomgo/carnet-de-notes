@@ -1,4 +1,4 @@
-"""Module the contains the routes with associated methods"""
+"""Module that contains the routes with associated methods"""
 
 from datetime import datetime
 
