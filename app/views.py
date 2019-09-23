@@ -8,6 +8,7 @@ from .forms import NewThoughtForm, LoginForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
 from urllib.parse import urlparse, urljoin
 
+# Start the app called in run.py and configure it
 app = Flask(__name__)
 app.config.from_object('config')
 
@@ -18,23 +19,31 @@ def is_safe_url(target):
     return test_url.scheme in ('http', 'https') and \
            ref_url.netloc == test_url.netloc
 
+# Here we define two different routes matching the method
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     """Function to show login form and check user credentials in database"""
+    # if the user is already logged in we send him to the main page
     if current_user.is_authenticated:
         return redirect('/index/')
+    # Instance of the form object used to display an HTML form in the view
     form = LoginForm()
+    # If the form is correctly filled according to specifications of the forms file
     if form.validate_on_submit():
+        # Check in database for user with the given pseudo
         user = User.query.filter_by(pseudo=form.pseudo.data).first()
+        # one has been found and the passwords are the same
+        # we log him in and redirect to the main page
         if user and user.check_password(form.password.data):
             login_user(user)
             next = request.args.get('next')
             if not is_safe_url(next):
                 return abort(400)
             return redirect(next or '/index/')
+        # otherwise we show an error message and the login form again
         flash("Pseudo ou mot de passe incorect(s)", "danger")
-    return render_template("login.html.j2", thoughts=thoughts, form=form)
+    return render_template("login.html.j2", form=form)
 
 @app.route('/logout/')
 @login_required
