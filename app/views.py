@@ -81,10 +81,14 @@ def register():
             flash("Une erreur est survenue, nous n'avons pas pu vous enregistrer", "danger")
     return render_template("register.html.j2", form=form)
 
+# ALL THE NEXT ROUTES HAVE THE LOGIN REQUIERED DECORATOR
+# BECAUSE THEY ARE RESERVED TO AUTHENTICATED MEMBERS ONLY
+
 @app.route('/index/')
 @login_required
 def index():
     """Function to show the user thoughts by default"""
+    # Retrieve thoughts for a specific user from database
     thoughts = Thought.query.filter_by(user=current_user).all()
     return render_template("index.html.j2", thoughts=thoughts)
 
@@ -100,36 +104,49 @@ def thoughts():
 @login_required
 def new_thought():
     """Function to show a form and add a thought in database"""
+    # Instance of the form object used to display an HTML form in the view
     form = NewThoughtForm()
     if form.validate_on_submit():
+        # If everything is OK we instanciate a thought objet
         thought = Thought(form.content.data, current_user.id)
+        # Register the thought oject in the database and redirect to home page
         db.session.add(thought)
         db.session.commit()
         return redirect('/index')
     return render_template("admin/new_thought.html.j2", form=form)
 
+# This route has a paramater in the url, the id we want to delete
 @app.route('/admin/thought/delete/<int:id>')
 @login_required
+# Do not forget to add an id parameter in the function corresponding to the route parameter
 def delete_thought(id):
     """Function to delete a thought in database"""
+    # Retrieve the thought object we want to delete by it's id from database
     thought = Thought.query.get(id)
+    # if we found a matching thought and it is owned by the logged user we delete it
     if thought and thought.user == current_user:
         db.session.delete(thought)
         db.session.commit()
         flash("Votre note a bien été supprimée", "success")
     return redirect('/admin/thoughts/')
 
+# This route has a paramater in the url, the id of the thought we want to update
 @app.route('/admin/thought/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_thought(id):
     """Function to show a form with thought's info and update it in the database"""
+    # Retrieve the thought object we want to update by it's id from database
     thought = Thought.query.get(id)
+    # If do not find the thougth or it is not owned by the user we redirect with error message
     if not thought or thought.user != current_user:
         flash("Il semble qu'il y ait eu un problème", "danger")
         return redirect("/admin/thoughts/")
+    # Instance of the form object used to display a prefilled form in the view
     form = NewThoughtForm(obj=thought)
     if form.validate_on_submit():
+        # update the content in the object NOT the database
         thought.content = form.content.data
+        # update the database
         db.session.commit()
         return redirect('/admin/thoughts/')
     return render_template('admin/update_thought.html.j2', thought=thought, form=form)
