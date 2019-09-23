@@ -116,6 +116,6 @@ def update_thought(id):
         return redirect('/admin/thoughts/')
     return render_template('admin/update_thought.html.j2', thought=thought, form=form)
 
-
-if __name__ == "__main__":
-    app.run()
+# 
+# if __name__ == "__main__":
+#     app.run()
